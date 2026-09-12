@@ -1,0 +1,8 @@
+{
+  "name": "hot-dog-wippel-public",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@netlify/blobs": "latest"
+  }
+}
