@@ -1,1 +1,4 @@
-const zones=[['Murta',5],['Cordeiros',5],['Costa Cavalcante',5],['São Vicente',7],['Nilo Bittencourt',7],['Cidade Nova',9],['Portal 1 e 2',8],['Barra do Rio',6],['São João',7]]; export default async()=>Response.json({zones:zones.map(([neighborhood,fee])=>({neighborhood,fee}))}); export const config={path:'/api/delivery-zones'};
+import { getStore } from '@netlify/blobs';
+const fallback=[['Murta',5],['Cordeiros',5],['Costa Cavalcante',5],['São Vicente',7],['Nilo Bittencourt',7],['Cidade Nova',9],['Portal 1 e 2',8],['Barra do Rio',6],['São João',7]].map(([neighborhood,fee])=>({neighborhood,fee}));
+export default async()=>{const store=getStore('wippel-admin',{consistency:'strong'});const saved:any=await store.get('store-settings',{type:'json'});const zones=Array.isArray(saved?.zones)&&saved.zones.length?saved.zones:fallback;return Response.json({zones},{headers:{'cache-control':'no-store'}})};
+export const config={path:'/api/delivery-zones'};
