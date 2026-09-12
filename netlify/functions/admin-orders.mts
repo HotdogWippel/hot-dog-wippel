@@ -1,10 +1,10 @@
 import { getStore } from '@netlify/blobs';
 
-const ok=(req:Request)=>{const secret=(Deno.env.get('ADMIN_SECRET')||'').trim();return Boolean(secret)&&req.headers.get('x-admin-secret')===secret};
+const ok=(req:Request)=>{const secret=(Netlify.env.get('ADMIN_SECRET')||'').trim();return Boolean(secret)&&req.headers.get('x-admin-secret')===secret};
 const safeStatus=new Set(['aceito','em_preparo','saiu_entrega','finalizado','cancelado']);
 export default async(req:Request)=>{
  if(!ok(req)) return Response.json({error:'Acesso não autorizado.'},{status:401});
- const store=getStore('wippel-orders',{consistency:'strong'}),url=new URL(req.url);
+ const store=getStore('wippel-orders',{consistency:'strong'});
  if(req.method==='GET'){
   const list:any=await store.list({prefix:'order-'});const orders:any[]=[];
   for(const blob of (list.blobs||[])){const o:any=await store.get(blob.key,{type:'json'});if(o)orders.push({...o,_key:blob.key});}
