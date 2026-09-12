@@ -1,0 +1,1 @@
+const zones=[['Murta',5],['Cordeiros',5],['Costa Cavalcante',5],['São Vicente',7],['Nilo Bittencourt',7],['Cidade Nova',9],['Portal 1 e 2',8],['Barra do Rio',6],['São João',7]]; export default async()=>Response.json({zones:zones.map(([neighborhood,fee])=>({neighborhood,fee}))}); export const config={path:'/api/delivery-zones'};
