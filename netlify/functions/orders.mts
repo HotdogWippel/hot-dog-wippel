@@ -20,9 +20,10 @@ export default async (req:Request)=>{
   if(!Number.isFinite(subtotal)||subtotal<=0) return Response.json({error:'Não foi possível calcular o pedido.'},{status:400});
   const total=subtotal+fee;
   const now=Date.now(), orderNumber=String(now).slice(-6);
-  const order={...b,customer_name:name,phone,subtotal,delivery_fee:fee,total,order_number:orderNumber,status:'aceito',paid:false,printed:false,created_at:new Date().toISOString(),source:'web-netlify'};
+  const trackingToken=crypto.randomUUID().replaceAll('-','');
+  const order={...b,customer_name:name,phone,subtotal,delivery_fee:fee,total,order_number:orderNumber,status:'aceito',paid:false,printed:false,created_at:new Date().toISOString(),source:'web-netlify',tracking_token:trackingToken};
   const store=getStore('wippel-orders',{consistency:'strong'});
-  await store.setJSON(`order-${now}-${crypto.randomUUID()}`,order);
-  return Response.json({ok:true,order_number:orderNumber,total,pix_key:'47999821938'});
+  await store.setJSON(`order-${trackingToken}`,order);
+  return Response.json({ok:true,order_number:orderNumber,total,pix_key:'47999821938',tracking_url:`/acompanhar.html?pedido=${trackingToken}`});
 };
 export const config={path:'/api/orders'};
